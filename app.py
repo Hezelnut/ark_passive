@@ -66,5 +66,3 @@ with tab2:
 
 with tab3:
     st.dataframe(market(tab1),width=500)
-
-    
