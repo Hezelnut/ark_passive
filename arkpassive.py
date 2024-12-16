@@ -6,12 +6,12 @@ def Tier_1(t1):
     return stat_base
 
 def Tier_2(t2):
-    t2_1 = t2[0]
-    t2_2 = t2[1]
-    t2_3 = t2[2]
-    t2_4 = t2[3]
-    t2_5 = t2[4]
-    if sum(t2)>3:
+    t2_1 = t2['t2_1']
+    t2_2 = t2['t2_2']
+    t2_3 = t2['t2_3']
+    t2_4 = t2['t2_4']
+    t2_5 = t2['t2_5']
+    if t2_1+t2_2+t2_3+t2_4+t2_5>3:
         print('Error')
     elif t2_1>2 or t2_2>2 or t2_3>2 or t2_5>2:
         print('Error')
@@ -31,12 +31,12 @@ def Tier_2(t2):
     return tier2_stat
 
 def Tier_3(t3):
-    t3_1 = t3[0]
-    t3_2 = t3[1]
-    t3_3 = t3[2]
-    t3_4 = t3[3]
-    t3_5 = t3[4]
-    if sum(t3)>2:
+    t3_1 = t3['t3_1']
+    t3_2 = t3['t3_2']
+    t3_3 = t3['t3_3']
+    t3_4 = t3['t3_4']
+    t3_5 = t3['t3_5']
+    if t3_1+t3_2+t3_3+t3_4+t3_5>2:
         print('Error')
     else:
         # t3_1 : 무한한 마력
@@ -55,12 +55,13 @@ def Tier_3(t3):
     return tier3_stat
 
 def Tier_4(t4):
-    t4_1 = t4[0]
-    t4_2 = t4[1]
-    t4_3 = t4[2]
-    t4_4 = t4[3]
-    t4_5 = t4[4]
-    if sum(t4)>2:
+    t4_1 = t4['t4_1']
+    t4_2 = t4['t4_2']
+    t4_3 = t4['t4_3']
+    t4_4 = t4['t4_4']
+    t4_5 = t4['t4_5']
+    if t4_1+t4_2+t4_3+t4_4+t4_5>2:
+        print('Error')
         print('Error')
     else:
         tier4_stat = {
