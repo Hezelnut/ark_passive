@@ -39,6 +39,7 @@ def elixer(user_info):
         '치명타 시 피해 증가':[],
         '백어택':[],
         '헤드어택':[],
+        '비방향성':[],
         '캐스팅':[],
         '차징':[],
         '쿨타임 감소':[],
@@ -116,6 +117,7 @@ def transcendence(user_info):
         '치명타 시 피해 증가':[],
         '백어택':[],
         '헤드어택':[],
+        '비방향성':[],
         '캐스팅':[],
         '차징':[],
         '쿨타임 감소':[],
@@ -190,6 +192,7 @@ def accessory(user_info):
         '치명타 시 피해 증가':[],
         '백어택':[],
         '헤드어택':[],
+        '비방향성':[],
         '캐스팅':[],
         '차징':[],
         '쿨타임 감소':[],
@@ -245,6 +248,7 @@ def stat(user_info):
         '치명타 시 피해 증가':[],
         '백어택':[],
         '헤드어택':[],
+        '비방향성':[],
         '캐스팅':[],
         '차징':[],
         '쿨타임 감소':[],
@@ -265,3 +269,11 @@ def stat(user_info):
             dict_stat['마법 방어력'].append(int(u.split('+')[1]))
 
     return dict_stat
+
+def armlet(user_info):
+    armlet_json = user_info.equip_armlet()
+    jump_point = armlet_json['Element_007']['value']['Element_001']
+    armlet_option = armlet_json['Element_004']['value']['Element_001'].lower().replace("<fontcolor='#99ff99'>",'').replace("<fontcolor='#ff9999'>",'').replace("</font>",'').replace("</img>",'[]').replace("<br>",'[]').split('[]')
+    armlet_option = [x for x in armlet_option if '<' not in x ]
+
+    return jump_point, armlet_option
