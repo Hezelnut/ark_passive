@@ -25,7 +25,7 @@ load_evolve(ark_process).Tier_all() # 진화탭 모든 티어 정보
 # Tier_3()
 # TIer_4() 가능
 
-load_enlight(ark_process).test_enlight() # 깨달음 탭
+load_enlight(ark_process).ark_enlight() # 깨달음 탭
 
-load_jump(ark_process).test_jump() # 도약 탭
+load_jump(ark_process).ark_jump() # 도약 탭
 

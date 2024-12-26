@@ -8,10 +8,10 @@ class load_evolve:
         self.t4 = tuple_1[3]
     
     def Tier_1(self):
-        stat_base = {'crit': 69, 'vel': 72, 'abl': 70}
-        stat_base['crit'] = stat_base['crit'] + self.t1['crit']*50
-        stat_base['vel'] = stat_base['vel'] + self.t1['vel']*50
-        stat_base['abl'] = stat_base['abl'] + self.t1['abl']*50
+        stat_base = {'치명': 69, '신속': 72, '특화': 70}
+        stat_base['치명'] = stat_base['치명'] + self.t1['치명']*50
+        stat_base['신속'] = stat_base['신속'] + self.t1['신속']*50
+        stat_base['특화'] = stat_base['특화'] + self.t1['특화']*50
         return stat_base
 
     def Tier_2(self):
@@ -93,7 +93,7 @@ class load_enlight:
         self.u2 = tuple_2[1]
         self.u3 = tuple_2[2]
         self.u4 = tuple_2[3]
-    def test_enlight(self):
+    def ark_enlight(self):
         return self.u1, self.u2, self.u3, self.u4
 
 class load_jump:
@@ -102,5 +102,5 @@ class load_jump:
         tuple_3 = ark_process.equip_jump()
         self.v1 = tuple_3[0]
         self.v2 = tuple_3[1]
-    def test_jump(self):
+    def ark_jump(self):
         return self.v1, self.v2
