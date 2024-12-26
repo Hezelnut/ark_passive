@@ -1,17 +1,17 @@
-class load_arkpassive:
+class load_evolve:
     def __init__(self,ark_process):
         self.ark_process = ark_process
-        tuple_ = ark_process.equip_arkpassive()
-        self.t1 = tuple_[0]
-        self.t2 = tuple_[1]
-        self.t3 = tuple_[2]
-        self.t4 = tuple_[3]
+        tuple_1 = ark_process.equip_arkpassive()
+        self.t1 = tuple_1[0]
+        self.t2 = tuple_1[1]
+        self.t3 = tuple_1[2]
+        self.t4 = tuple_1[3]
     
     def Tier_1(self):
-        stat_base = {'crit': 69, 'vel': 72, 'abl': 70}
-        stat_base['crit'] = stat_base['crit'] + self.t1['crit']*50
-        stat_base['vel'] = stat_base['vel'] + self.t1['vel']*50
-        stat_base['abl'] = stat_base['abl'] + self.t1['abl']*50
+        stat_base = {'치명': 69, '신속': 72, '특화': 70}
+        stat_base['치명'] = stat_base['치명'] + self.t1['치명']*50
+        stat_base['신속'] = stat_base['신속'] + self.t1['신속']*50
+        stat_base['특화'] = stat_base['특화'] + self.t1['특화']*50
         return stat_base
 
     def Tier_2(self):
@@ -83,3 +83,24 @@ class load_arkpassive:
     
     def Tier_all(self):
         return self.Tier_1(), self.Tier_2(), self.Tier_3(), self.Tier_4()
+
+
+class load_enlight:
+    def __init__(self,ark_process):
+        self.ark_process = ark_process
+        tuple_2 = ark_process.equip_enlight()
+        self.u1 = tuple_2[0]
+        self.u2 = tuple_2[1]
+        self.u3 = tuple_2[2]
+        self.u4 = tuple_2[3]
+    def ark_enlight(self):
+        return self.u1, self.u2, self.u3, self.u4
+
+class load_jump:
+    def __init__(self,ark_process):
+        self.ark_process = ark_process     
+        tuple_3 = ark_process.equip_jump()
+        self.v1 = tuple_3[0]
+        self.v2 = tuple_3[1]
+    def ark_jump(self):
+        return self.v1, self.v2

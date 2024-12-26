@@ -35,6 +35,30 @@ class equip:
 
 ### 팔찌 : equip_armlet()
 # Element_004 : 팔찌 효과
+
+form = {'피해 증가':[],
+        '추가 피해':[],
+        '공격력 증가 (%)':[],
+        '공격력 증가 (+)':[],
+        '무기공격력 증가 (%)':[],
+        '무기공격력 증가 (+)':[],
+        '스탯 증가 (%)':[],
+        '스탯 증가 (+)':[],
+        '치명타 적중률 증가':[],
+        '치명타 피해 증가':[],
+        '치명타 시 피해 증가':[],
+        '백어택':[],
+        '헤드어택':[],
+        '캐스팅':[],
+        '차징':[],
+        '쿨타임 감소':[],
+        '진화형 피해':[],
+        '물리 방어력':[],
+        '마법 방어력':[],
+        '최대 생명력':[],
+        }
+
+
 """
         return print(info_help)
     
@@ -53,6 +77,20 @@ class equip:
         response_3 = requests.get(url_3,headers=self.headers)
 
         return armor_list, response_2.json(), response_3.json()
+    
+    def skill_and_gem(self):
+        url_4 = f'https://developer-lostark.game.onstove.com/armories/characters/{self.nickname}/combat-skills'
+        response_4 = requests.get(url_4,headers=self.headers)
+
+        url_5 = f'https://developer-lostark.game.onstove.com/armories/characters/{self.nickname}/gems'
+        response_5 = requests.get(url_5,headers=self.headers)
+
+        return response_4.json(), response_5.json()
+    
+    def profile(self):
+        url_6 = f'https://developer-lostark.game.onstove.com/armories/characters/{self.nickname}/profiles'
+        response_6 = requests.get(url_6,headers=self.headers)
+        return response_6.json()
 
 class process:
     def __init__(self,equip_load):
@@ -95,14 +133,14 @@ class process:
         x_3 = [x3.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for x3 in x_0 if '3티어' in x3]
         x_4 = [x4.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for x4 in x_0 if '4티어' in x4]
 
-        tier1 = {'crit':0,'vel':0,'abl':0}
+        tier1 = {'치명':0,'신속':0,'특화':0}
         for m,n in enumerate(x_1):
             if '치명' == n[0]:
-                tier1['crit'] = int(n[1])
+                tier1['치명'] = int(n[1])
             if '신속' == n[0]:
-                tier1['vel'] = int(n[1])
+                tier1['신속'] = int(n[1])
             if '특화' == n[0]:
-                tier1['abl'] = int(n[1])
+                tier1['특화'] = int(n[1])
 
         tier2 = {'t2_1':0,'t2_2':0,'t2_3':0,'t2_4':0,'t2_5':0}
         for m,n in enumerate(x_2):
@@ -144,3 +182,17 @@ class process:
                 tier4['t4_5'] = int(n[1])
         
         return tier1, tier2, tier3, tier4
+    
+    def equip_enlight(self):
+        y_0 = [y['Description'].replace("<FONT color='#83E9FF'>",'').replace("<FONT color='#F1D594'>",'').replace("<FONT color='#C2EA55'>",'').replace("</FONT>",'') for y in self.equip_load['Effects'] if y['Name']=='깨달음']
+        y_1 = [y1.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for y1 in y_0 if '1티어' in y1]
+        y_2 = [y2.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for y2 in y_0 if '2티어' in y2]
+        y_3 = [y3.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for y3 in y_0 if '3티어' in y3]
+        y_4 = [y4.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for y4 in y_0 if '4티어' in y4]
+        return y_1,y_2,y_3,y_4
+    
+    def equip_jump(self):
+        z_0 = [z['Description'].replace("<FONT color='#83E9FF'>",'').replace("<FONT color='#F1D594'>",'').replace("<FONT color='#C2EA55'>",'').replace("</FONT>",'') for z in self.equip_load['Effects'] if z['Name']=='도약']
+        z_1 = [z1.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for z1 in z_0 if '1티어' in z1]
+        z_2 = [z2.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for z2 in z_0 if '2티어' in z2]
+        return z_1, z_2
