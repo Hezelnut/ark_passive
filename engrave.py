@@ -1,5 +1,5 @@
-def engraving(user_info):
-    engrave_list = user_info.equip_engraving()
+def engraving(engrave_process):
+    engrave_list = engrave_process.equip_engraving()
     a = engrave_list[0]
     b = engrave_list[1]
     c = engrave_list[2]

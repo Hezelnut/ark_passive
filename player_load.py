@@ -1,7 +1,7 @@
 import requests
 import json
 
-class all_equip:
+class equip:
     def __init__(self,name):
         self.nickname = name
         self.headers = {
@@ -39,57 +39,57 @@ class all_equip:
         return print(info_help)
     
     def equipment(self):
-        url = f'https://developer-lostark.game.onstove.com/armories/characters/{self.nickname}/equipment'
-        response = requests.get(url,headers=self.headers)
-        equip_list = list()
+        url_1 = f'https://developer-lostark.game.onstove.com/armories/characters/{self.nickname}/equipment'
+        response_1 = requests.get(url_1,headers=self.headers)
+        armor_list = list()
         for i in range(13):
-            e = response.json()[i]['Tooltip'].replace('''\r\n''','').replace(' ','')
-            equip_list.append(e)
-        return equip_list
+            e = response_1.json()[i]['Tooltip'].replace('''\r\n''','').replace(' ','')
+            armor_list.append(e)
 
-    def armories(self):
-        url = f'https://developer-lostark.game.onstove.com/armories/characters/{self.nickname}/engravings'
-        response = requests.get(url,headers=self.headers)
-        return response.json()
+        url_2 = f'https://developer-lostark.game.onstove.com/armories/characters/{self.nickname}/engravings'
+        response_2 = requests.get(url_2,headers=self.headers)
 
-    def ark(self):
-        url = f'https://developer-lostark.game.onstove.com/armories/characters/{self.nickname}/arkpassive'
-        response = requests.get(url,headers=self.headers)
-        return response.json()
+        url_3 = f'https://developer-lostark.game.onstove.com/armories/characters/{self.nickname}/arkpassive'
+        response_3 = requests.get(url_3,headers=self.headers)
 
+        return armor_list, response_2.json(), response_3.json()
+
+class process:
+    def __init__(self,equip_load):
+        self.equip_load = equip_load
 
     def equip_weapon(self):
-        return json.loads(self.equipment()[0])
+        return json.loads(self.equip_load[0])
 
     def equip_armor(self):
         armory = list()
         for i in range(1,6):
-            armor = json.loads(self.equipment()[i])
+            armor = json.loads(self.equip_load[i])
             armory.append(armor)
         return armory
 
     def equip_accessory(self):
         accessory_list = list()
         for i in range(6,11):
-            accessory = json.loads(self.equipment()[i])
+            accessory = json.loads(self.equip_load[i])
             accessory_list.append(accessory)
         return accessory_list
 
     def equip_stone(self):
-        return json.loads(self.equipment()[11])
+        return json.loads(self.equip_load[11])
 
     def equip_armlet(self):
-        return json.loads(self.equipment()[12])
+        return json.loads(self.equip_load[12])
 
     def equip_engraving(self):
         tuple_list = list()
-        for eng in self.armories()['ArkPassiveEffects']:
+        for eng in self.equip_load['ArkPassiveEffects']:
             eng_tuple = (eng['Name'], eng['Level'],eng['AbilityStoneLevel'])
             tuple_list.append(eng_tuple)
         return tuple_list
     
     def equip_arkpassive(self):
-        x_0 = [x['Description'].replace("<FONT color='#83E9FF'>",'').replace("<FONT color='#F1D594'>",'').replace("<FONT color='#C2EA55'>",'').replace("</FONT>",'') for x in self.ark()['Effects'] if x['Name']=='진화']
+        x_0 = [x['Description'].replace("<FONT color='#83E9FF'>",'').replace("<FONT color='#F1D594'>",'').replace("<FONT color='#C2EA55'>",'').replace("</FONT>",'') for x in self.equip_load['Effects'] if x['Name']=='진화']
         x_1 = [x1.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for x1 in x_0 if '1티어' in x1]
         x_2 = [x2.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for x2 in x_0 if '2티어' in x2]
         x_3 = [x3.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for x3 in x_0 if '3티어' in x3]
@@ -132,7 +132,7 @@ class all_equip:
         
         tier4 = {'t4_1':0,'t4_2':0,'t4_3':0,'t4_4':0,'t4_5':0}
         for m,n in enumerate(x_4):
-            if '뭉특한 가시' == n[0]:
+            if '뭉툭한 가시' == n[0]:
                 tier4['t4_1'] = int(n[1])
             if '음속 돌파' == n[0]:
                 tier4['t4_2'] = int(n[1])
