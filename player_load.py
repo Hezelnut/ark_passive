@@ -80,21 +80,17 @@ form = {'피해 증가':[],
         url_3 = f'https://developer-lostark.game.onstove.com/armories/characters/{self.nickname}/arkpassive'
         response_3 = requests.get(url_3,headers=self.headers)
 
-        return armor_list, response_2.json(), response_3.json()
-    
-    def skill_and_gem(self):
         url_4 = f'https://developer-lostark.game.onstove.com/armories/characters/{self.nickname}/combat-skills'
         response_4 = requests.get(url_4,headers=self.headers)
 
         url_5 = f'https://developer-lostark.game.onstove.com/armories/characters/{self.nickname}/gems'
         response_5 = requests.get(url_5,headers=self.headers)
 
-        return response_4.json(), response_5.json()
-    
-    def profile(self):
         url_6 = f'https://developer-lostark.game.onstove.com/armories/characters/{self.nickname}/profiles'
         response_6 = requests.get(url_6,headers=self.headers)
-        return response_6.json()
+
+        return armor_list, response_2.json(), response_3.json(), response_4.json(), response_5.json(), response_6.json()
+
 
 class process:
     def __init__(self,equip_load):
@@ -130,7 +126,7 @@ class process:
             tuple_list.append(eng_tuple)
         return tuple_list
     
-    def equip_arkpassive(self):
+    def equip_evolve(self):
         x_0 = [x['Description'].replace("<FONT color='#83E9FF'>",'').replace("<FONT color='#F1D594'>",'').replace("<FONT color='#C2EA55'>",'').replace("</FONT>",'') for x in self.equip_load['Effects'] if x['Name']=='진화']
         x_1 = [x1.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for x1 in x_0 if '1티어' in x1]
         x_2 = [x2.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for x2 in x_0 if '2티어' in x2]

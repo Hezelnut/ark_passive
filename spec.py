@@ -1,8 +1,14 @@
 import re
+import pandas
+from player_load import *
 
-def elixer(user_info):
-    info = user_info.equip_armor()
+def elixer(user_info_equipment):
+    arm, _, _, _, _, _ = user_info_equipment
+    equip_process = process(arm)
+    elixer_armor = equip_process.equip_armor()
+
     elixer_list = list()
+
     def compile(x):
         x = x.replace('[','<').replace(']','>')
         x = x.lower()
@@ -14,8 +20,8 @@ def elixer(user_info):
         return x
     
     for k in range(0,5):
-        elixer_1 = info[k]['Element_010']['value']['Element_000']['contentStr']['Element_000']['contentStr']
-        elixer_2 = info[k]['Element_010']['value']['Element_000']['contentStr']['Element_001']['contentStr']
+        elixer_1 = elixer_armor[k]['Element_010']['value']['Element_000']['contentStr']['Element_000']['contentStr']
+        elixer_2 = elixer_armor[k]['Element_010']['value']['Element_000']['contentStr']['Element_001']['contentStr']
         elixer_list.append(compile(elixer_1))
         elixer_list.append(compile(elixer_2))
 
@@ -91,10 +97,14 @@ def elixer(user_info):
     return dict_stat
 
 
-def transcendence(user_info):
+def transcendence(user_info_equipment):
+    arm, _, _, _, _, _ = user_info_equipment
+    equip_process = process(arm)
+    
+    info_armor = equip_process.equip_armor()
+    info_weapon = equip_process.equip_weapon()
+
     transcendence_all = list()
-    info_armor = user_info.equip_armor()
-    info_weapon = user_info.equip_weapon()
 
     def tran_sub(user_info_equip_):
         tran_0 = user_info_equip_['Element_009']['value']['Element_000']['contentStr']['Element_000']['contentStr']
@@ -176,8 +186,13 @@ def transcendence(user_info):
     return dict_stat, transcendence_stage
 
 
-def accessory(user_info):
-    info = user_info.equip_accessory()
+def accessory(user_info_equipment):
+    arm, _, _, _, gem, _ = user_info_equipment
+    equip_process = process(arm)
+    info_acc = equip_process.equip_accessory()
+    info_stone = equip_process.equip_stone()
+
+    gem_stat = (100+float(gem['Effects']['Description'].replace("기본 공격력 총합 : ","<split>").replace("%</FONT>","<split>").split("<split>")[1]))/100
 
     dict_stat = {'피해 증가':[],
         '추가 피해':[],
@@ -207,21 +222,21 @@ def accessory(user_info):
 
     acc_list = list()
     for k in range(0,5):
-        acc_0 = info[k]['Element_007']['value']['Element_001']
-        acc_1 = info[k]['Element_005']['value']['Element_001'].lower().replace("</img>",'split/').replace("<br",'split/').split('split/')
+        acc_0 = info_acc[k]['Element_007']['value']['Element_001']
+        acc_1 = info_acc[k]['Element_005']['value']['Element_001'].lower().replace("</img>",'split/').replace("<br",'split/').split('split/')
         acc_1 = acc_1[1::2]    
         acc_list.extend(acc_1)
-        acc_list.extend(info[k]['Element_004']['value']['Element_001'].replace("<FONTCOLOR='#686660'>",'').replace("</FONT>",'').split("<BR>")[2:])
+        acc_list.extend(info_acc[k]['Element_004']['value']['Element_001'].replace("<FONTCOLOR='#686660'>",'').replace("</FONT>",'').split("<BR>")[2:])
     # acc_list_head = [x for x in acc_list if '%' in x]
     acc_list = [x for x in acc_list if ('파티원' not in x) and ('아군' not in x) and ('상태이상' not in x) and ('전투' not in x)]
 
-    stone_info = user_info.equip_stone()
-    stone_1, stone_2 = stone_info['Element_004']['value']['Element_001'], stone_info['Element_005']['value']['Element_001']
+    
+    stone_1, stone_2 = info_stone['Element_004']['value']['Element_001'], info_stone['Element_005']['value']['Element_001']
     stone = int(stone_1.split('+')[1])+int(stone_2.split('+')[1])
     
-    if 'Element_003' in list(stone_info['Element_006']['value']['Element_000']['contentStr'].keys()):
-        stone97 = stone_info['Element_006']['value']['Element_000']['contentStr']['Element_003']['contentStr'].replace("기본공격력+","<split>").replace("%<BR>","<split>").split("<split>")[1]
-        stone97 = (100+float(stone97))/100
+    if 'Element_003' in list(info_stone['Element_006']['value']['Element_000']['contentStr'].keys()):
+        stone97 = info_stone['Element_006']['value']['Element_000']['contentStr']['Element_003']['contentStr'].replace("기본공격력+","<split>").replace("%<BR>","<split>").split("<split>")[1]
+        stone97 = (float(stone97))/100
         dict_stat['기본 공격력 증가 (%)'].append(stone97)
 
     
@@ -252,13 +267,16 @@ def accessory(user_info):
             dict_stat['최대 생명력'].append(int(e.split('+')[1]))
 
     dict_stat['체력'].append(stone)
+    dict_stat['기본 공격력 증가 (%)'].append(gem_stat)
     
     return dict_stat
 
 
-def stat(user_info):
-    armor = user_info.equip_armor()
-    weapon = user_info.equip_weapon()
+def stat(user_info_equipment):
+    arm, _, _, _, _, profile = user_info_equipment
+    equip_process = process(arm)
+    armor = equip_process.equip_armor()
+    weapon = equip_process.equip_weapon()
 
     stat_list = list()
     stat_weapon = weapon['Element_006']['value']['Element_001'].split('<BR>')
@@ -328,3 +346,50 @@ def armlet(user_info):
     return armlet_output
 
 
+def gem_info(user_info_equipment):
+    _, _, _, _, gem, _ = user_info_equipment
+
+    # _, gem = user_info.skill_and_gem()
+
+    gem_dict = dict()
+    
+    gem_name = [x['Name'] for x in gem['Effects']['Skills']]
+    gem_name = list(set(gem_name))    
+
+    for g in gem_name:
+        gem_decription = [x['Description'][0] for x in gem['Effects']['Skills'] if x['Name']==g]
+        gem_dict[g] = gem_decription
+
+    gem_df = pandas.DataFrame(columns=['Skill_name','gem_effect'])
+
+    row_num = 0
+    for g1 in list(gem_dict.keys()):
+        for g2 in gem_dict[g1]:
+            gem_df.loc[row_num] = [g1, g2]
+            row_num += 1
+
+    return gem_df
+
+
+def skill_tripod(user_info_equipment):
+    _, _, _, skill, _, _ = user_info_equipment
+
+    # skill, _ = user_info.skill_and_gem()
+    selected_skill = list()
+
+    for s in skill:
+        if s['Level']>1:
+            selected_skill.append(s['Name'])
+
+    skill_info = [{s['Name']:[[x['Name'],str(x['Level'])+'레벨',x['Tooltip']] for x in s['Tripods'] if x['IsSelected']==True]} for s in skill if s['Name'] in selected_skill]
+
+    tripod = pandas.DataFrame(columns=['Skill_name','Tripod','Tripod_level','Tripod_effect'])
+    row_num = 0
+
+    for f in range(0,len(skill_info)):
+        n = list(skill_info[f].keys())[0]
+        for g in skill_info[f][n]:
+            tripod.loc[row_num] = [n,g[0],g[1],g[2].replace("<font color='#FFFDE7'>",'').replace("<FONT COLOR='#ffff99'>",'').replace("</FONT>",'').replace("<FONT COLOR='#99ff99'>",'').replace("</font>",'')]
+            row_num +=1
+
+    return tripod

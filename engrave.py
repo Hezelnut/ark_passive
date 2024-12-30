@@ -1,4 +1,8 @@
-def engraving(engrave_process):
+from player_load import process
+
+def engraving(user_info_equipment):
+    _, eng, _, _, _, _ = user_info_equipment
+    engrave_process = process(eng)
     engrave_list = engrave_process.equip_engraving()
     a = engrave_list[0]
     b = engrave_list[1]
