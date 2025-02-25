@@ -1,9 +1,13 @@
-from player_load import process
+def ready_tuple(data):
+    tuple_list = list()
+    for eng in data['ArkPassiveEffects']:
+        eng_tuple = (eng['Name'], eng['Level'],eng['AbilityStoneLevel'])
+        tuple_list.append(eng_tuple)
+    return tuple_list
 
-def engraving(user_info_equipment):
-    _, eng, _, _, _, _ = user_info_equipment
-    engrave_process = process(eng)
-    engrave_list = engrave_process.equip_engraving()
+def engraving(response):
+    engrave_process = response['engravings']
+    engrave_list = ready_tuple(engrave_process)
     a = engrave_list[0]
     b = engrave_list[1]
     c = engrave_list[2]
@@ -145,10 +149,7 @@ def engraving(user_info_equipment):
         for m,n in list(engraving_dict[x[0]].items())[:-1]:
             engraving_dict['Form'][m].append(n[x[1]])
 
-    engrave_def(a)
-    engrave_def(b)
-    engrave_def(c)
-    engrave_def(d)
-    engrave_def(e)
+    for x in [a,b,c,d,e]:
+        engrave_def(x)
 
-    return engraving_dict['Form']
+    return engraving_dict['Form'], engrave_list

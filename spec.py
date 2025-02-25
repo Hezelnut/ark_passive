@@ -1,11 +1,17 @@
 import re
 import pandas
-from player_load import *
+import json
 
-def elixer(user_info_equipment):
-    arm, _, _, _, _, _ = user_info_equipment
-    equip_process = process(arm)
-    elixer_armor = equip_process.equip_armor()
+
+"""
+user_name = get_name('nickname')
+response = user_name.get_reponse()
+armor_info = armor(response)
+"""
+
+# 엘릭서
+def elixer(response):
+    elixer_armor = response['armor']
 
     elixer_list = list()
 
@@ -25,12 +31,12 @@ def elixer(user_info_equipment):
         elixer_list.append(compile(elixer_1))
         elixer_list.append(compile(elixer_2))
 
-    list_elixeroption = list()
+    list_elixer_option = list()
     for e in elixer_list:
         if len(e)==2:
-            list_elixeroption.append(e[1])
+            list_elixer_option.append(e[1])
         if len(e)==4:
-            list_elixeroption.extend(e[0:-1])
+            list_elixer_option.extend(e[0:-1])
 
     dict_stat = {'피해 증가':[],
         '추가 피해':[],
@@ -61,7 +67,7 @@ def elixer(user_info_equipment):
     i = 0
     j = 0
 
-    for e in list_elixeroption:
+    for e in list_elixer_option:
         if ('무기공격력' in e) and ('%' not in e) :
             dict_stat['무기공격력 증가 (+)'].append(int(e.split('+')[1]))
         if ('공격력' in e) and ('무기' not in e) and ('%' in e):
@@ -91,24 +97,23 @@ def elixer(user_info_equipment):
     if j == 2 :
         dict_stat['추가 피해'].append(8.5)
         dict_stat['치명타 적중률 증가'].append(7)
+        elixer_name = '달인'
     if i == 2 :
         dict_stat['치명타 시 피해 증가'].append(1.12)
+        elixer_name = '회심'
 
-    return dict_stat
+    return dict_stat, elixer_name
 
-
-def transcendence(user_info_equipment):
-    arm, _, _, _, _, _ = user_info_equipment
-    equip_process = process(arm)
-    
-    info_armor = equip_process.equip_armor()
-    info_weapon = equip_process.equip_weapon()
+# 초월
+def transcendence(response):
+    info_armor = response['armor']
+    info_weapon = response['weapon']
 
     transcendence_all = list()
 
-    def tran_sub(user_info_equip_):
-        tran_0 = user_info_equip_['Element_009']['value']['Element_000']['contentStr']['Element_000']['contentStr']
-        tran_1 = user_info_equip_['Element_009']['value']['Element_000']['topStr']
+    def tran_sub(data):
+        tran_0 = data['Element_009']['value']['Element_000']['contentStr']['Element_000']['contentStr']
+        tran_1 = data['Element_009']['value']['Element_000']['topStr']
         tran_1 = tran_1.replace("<FONTCOLOR='#FFD200'>",'split/').replace("</FONT>",'split/').replace("</img>",'split/')
         tran_1 = tran_1.split('split/')
         tran_1 = tran_1[3]+'단계 '+tran_1[-1]
@@ -185,12 +190,12 @@ def transcendence(user_info_equipment):
 
     return dict_stat, transcendence_stage
 
+# 악세사리
+def accessory(response):
+    gem = response['gems']
 
-def accessory(user_info_equipment):
-    arm, _, _, _, gem, _ = user_info_equipment
-    equip_process = process(arm)
-    info_acc = equip_process.equip_accessory()
-    info_stone = equip_process.equip_stone()
+    info_acc = response['accessory']
+    info_stone = response['stone']
 
     gem_stat = (100+float(gem['Effects']['Description'].replace("기본 공격력 총합 : ","<split>").replace("%</FONT>","<split>").split("<split>")[1]))/100
 
@@ -271,12 +276,10 @@ def accessory(user_info_equipment):
     
     return dict_stat
 
-
-def stat(user_info_equipment):
-    arm, _, _, _, _, profile = user_info_equipment
-    equip_process = process(arm)
-    armor = equip_process.equip_armor()
-    weapon = equip_process.equip_weapon()
+# 품질 & 힘민지 스탯
+def stat(response):
+    armor = response['armor']
+    weapon = response['weapon']
 
     stat_list = list()
     stat_weapon = weapon['Element_006']['value']['Element_001'].split('<BR>')
@@ -336,8 +339,9 @@ def stat(user_info_equipment):
 
     return dict_stat
 
-def armlet(user_info):
-    armlet_json = user_info.equip_armlet()
+# 팔찌
+def armlet(response):
+    armlet_json = response['armlet']
     jump_point = armlet_json['Element_007']['value']['Element_001']
     armlet_output = [jump_point]
     armlet_option = armlet_json['Element_004']['value']['Element_001'].lower().replace("<fontcolor='#99ff99'>",'').replace("<fontcolor='#ff9999'>",'').replace("</font>",'').replace("</img>",'[]').replace("<br>",'[]').split('[]')
@@ -345,9 +349,9 @@ def armlet(user_info):
     armlet_output.extend(armlet_option)
     return armlet_output
 
-
-def gem_info(user_info_equipment):
-    _, _, _, _, gem, _ = user_info_equipment
+# 보석
+def gem_info(response):
+    gem = response['gems']
 
     # _, gem = user_info.skill_and_gem()
 
@@ -370,10 +374,9 @@ def gem_info(user_info_equipment):
 
     return gem_df
 
-
-def skill_tripod(user_info_equipment):
-    _, _, _, skill, _, _ = user_info_equipment
-
+# 스킬
+def skill_tripod(response):
+    skill = response['skill']
     # skill, _ = user_info.skill_and_gem()
     selected_skill = list()
 
@@ -393,3 +396,5 @@ def skill_tripod(user_info_equipment):
             row_num +=1
 
     return tripod
+
+#엘릭서, 초월, 악세, 팔찌, 각인서, 
