@@ -344,8 +344,11 @@ def armlet(response):
     armlet_json = response['armlet']
     jump_point = armlet_json['Element_007']['value']['Element_001']
     armlet_output = [jump_point]
-    armlet_option = armlet_json['Element_004']['value']['Element_001'].lower().replace("<fontcolor='#99ff99'>",'').replace("<fontcolor='#ff9999'>",'').replace("</font>",'').replace("</img>",'[]').replace("<br>",'[]').split('[]')
-    armlet_option = [x for x in armlet_option if '<' not in x ]
+    armlet_option = armlet_json['Element_004']['value']['Element_001'].lower().replace("<fontcolor='#99ff99'>",'') #.split('[]')
+    armlet_option = armlet_option.replace("<fontcolor='#ff9999'>",'').replace("</font>",'').replace("</img>",'[]').replace("<br>",'[]')
+    armlet_option = armlet_option.replace("<imgsrc='emoticon_tooltip_bracelet_locked'vspace='-5'>",'').replace("<imgsrc='emoticon_tooltip_bracelet_changeable'width='20'height='20'vspace='-6'>",'')
+    armlet_option = armlet_option.replace("[][]","<>").replace("[]",'').split("<>")
+    # armlet_option = [x for x in armlet_option if '<' not in x ]
     armlet_output.extend(armlet_option)
     return armlet_output
 
