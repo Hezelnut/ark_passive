@@ -282,8 +282,31 @@ class arkpassive:
     def evolve_tier_all(self):
         return self.evolve_Tier_1(), self.evolve_Tier_2(), self.evolve_Tier_3(), self.evolve_Tier_4()
 
-    # def enlight_all(self):
-    #     return self.u1, self.u2, self.u3, self.u4
+
+    def enlight(self):
+        x_0 = [x['Description'].replace("<FONT color='#83E9FF'>",'').replace("<FONT color='#F1D594'>",'').replace("<FONT color='#C2EA55'>",'').replace("</FONT>",'') for x in self.response['Effects'] if x['Name']=='깨달음']
+        x_1 = [x1.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for x1 in x_0 if '1티어' in x1]
+        x_2 = [x2.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for x2 in x_0 if '2티어' in x2]
+        x_3 = [x3.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for x3 in x_0 if '3티어' in x3]
+        x_4 = [x4.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for x4 in x_0 if '4티어' in x4]
+        
+        enlight_response = {
+            'tier1':x_1,
+            'tier2':x_2,
+            'tier3':x_3,
+            'tier4':x_4,
+        }
+        
+        return enlight_response
     
-    # def jump_all(self):
-    #     return self.v1, self.v2
+    def jump(self):
+        x_0 = [x['Description'].replace("<FONT color='#83E9FF'>",'').replace("<FONT color='#F1D594'>",'').replace("<FONT color='#C2EA55'>",'').replace("</FONT>",'') for x in self.response['Effects'] if x['Name']=='도약']
+        x_1 = [x1.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for x1 in x_0 if '1티어' in x1]
+        x_2 = [x2.replace('티어 ','//').replace(' Lv.','//').split('//')[1:3] for x2 in x_0 if '2티어' in x2]
+        
+        jump_response = {
+            'tier1':x_1,
+            'tier2':x_2
+        }
+        
+        return jump_response
