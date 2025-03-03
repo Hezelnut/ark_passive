@@ -2,6 +2,34 @@ import re
 import pandas
 import json
 
+dict_stat = {'특성':{'치명':0,'신속':0,'특화':0},
+        '피해 증가':[],
+        '추가 피해':[],
+        '공격력 증가 (%)':[],
+        '공격력 증가 (+)':[],
+        '기본 공격력 증가 (%)':[],
+        '무기공격력 증가 (%)':[],
+        '무기공격력 증가 (+)':[],
+        '스탯 증가 (%)':[],
+        '스탯 증가 (+)':[],
+        '치명타 적중률 증가':[],
+        '치명타 피해 증가':[],
+        '치명타 시 피해 증가':[],
+        '백어택':[],
+        '헤드어택':[],
+        '비방향성':[],
+        '캐스팅':[],
+        '차징':[],
+        '쿨타임 감소':[],
+        '진화형 피해':[],
+        '물리 방어력':[],
+        '마법 방어력':[],
+        '체력':[],        
+        '최대 생명력':[],
+        '생명력 활성':[],
+        '공격속도':[],
+        '이동속도':[]
+        }
 
 """
 user_name = get_name('nickname')
@@ -37,32 +65,6 @@ def elixer(response):
             list_elixer_option.append(e[1])
         if len(e)==4:
             list_elixer_option.extend(e[0:-1])
-
-    dict_stat = {'피해 증가':[],
-        '추가 피해':[],
-        '공격력 증가 (%)':[],
-        '공격력 증가 (+)':[],
-        '기본 공격력 증가 (%)':[],
-        '무기공격력 증가 (%)':[],
-        '무기공격력 증가 (+)':[],
-        '스탯 증가 (%)':[],
-        '스탯 증가 (+)':[],
-        '치명타 적중률 증가':[],
-        '치명타 피해 증가':[],
-        '치명타 시 피해 증가':[],
-        '백어택':[],
-        '헤드어택':[],
-        '비방향성':[],
-        '캐스팅':[],
-        '차징':[],
-        '쿨타임 감소':[],
-        '진화형 피해':[],
-        '물리 방어력':[],
-        '마법 방어력':[],
-        '체력':[],        
-        '최대 생명력':[],
-        '생명력 활성':[]
-        }
     
     i = 0
     j = 0
@@ -124,32 +126,6 @@ def transcendence(response):
 
     transcendence_all.extend(tran_sub(info_weapon))
     
-    dict_stat = {'피해 증가':[],
-        '추가 피해':[],
-        '공격력 증가 (%)':[],
-        '공격력 증가 (+)':[],
-        '기본 공격력 증가 (%)':[],
-        '무기공격력 증가 (%)':[],
-        '무기공격력 증가 (+)':[],
-        '스탯 증가 (%)':[],
-        '스탯 증가 (+)':[],
-        '치명타 적중률 증가':[],
-        '치명타 피해 증가':[],
-        '치명타 시 피해 증가':[],
-        '백어택':[],
-        '헤드어택':[],
-        '비방향성':[],
-        '캐스팅':[],
-        '차징':[],
-        '쿨타임 감소':[],
-        '진화형 피해':[],
-        '물리 방어력':[],
-        '마법 방어력':[],
-        '체력':[],
-        '최대 생명력':[],
-        '생명력 활성':[]
-        }
-
     transcendence_stage = list()
     sum_transcendence = 0
 
@@ -190,6 +166,7 @@ def transcendence(response):
 
     return dict_stat, transcendence_stage
 
+
 # 악세사리
 def accessory(response):
     gem = response['gems']
@@ -198,32 +175,6 @@ def accessory(response):
     info_stone = response['stone']
 
     gem_stat = (100+float(gem['Effects']['Description'].replace("기본 공격력 총합 : ","<split>").replace("%</FONT>","<split>").split("<split>")[1]))/100
-
-    dict_stat = {'피해 증가':[],
-        '추가 피해':[],
-        '공격력 증가 (%)':[],
-        '공격력 증가 (+)':[],
-        '기본 공격력 증가 (%)':[],
-        '무기공격력 증가 (%)':[],
-        '무기공격력 증가 (+)':[],
-        '스탯 증가 (%)':[],
-        '스탯 증가 (+)':[],
-        '치명타 적중률 증가':[],
-        '치명타 피해 증가':[],
-        '치명타 시 피해 증가':[],
-        '백어택':[],
-        '헤드어택':[],
-        '비방향성':[],
-        '캐스팅':[],
-        '차징':[],
-        '쿨타임 감소':[],
-        '진화형 피해':[],
-        '물리 방어력':[],
-        '마법 방어력':[],
-        '체력':[],
-        '최대 생명력':[],
-        '생명력 활성':[]
-        }
 
     acc_list = list()
     for k in range(0,5):
@@ -274,7 +225,7 @@ def accessory(response):
     dict_stat['체력'].append(stone)
     dict_stat['기본 공격력 증가 (%)'].append(gem_stat)
     
-    return dict_stat
+    return dict_stat, acc_list
 
 # 품질 & 힘민지 스탯
 def stat(response):
@@ -296,32 +247,6 @@ def stat(response):
     
     hp_percent = 1+quality_armor/14000
 
-    dict_stat = {'피해 증가':[],
-        '추가 피해':[],
-        '공격력 증가 (%)':[],
-        '공격력 증가 (+)':[],
-        '기본 공격력 증가 (%)':[],
-        '무기공격력 증가 (%)':[],
-        '무기공격력 증가 (+)':[],
-        '스탯 증가 (%)':[],
-        '스탯 증가 (+)':[],
-        '치명타 적중률 증가':[],
-        '치명타 피해 증가':[],
-        '치명타 시 피해 증가':[],
-        '백어택':[],
-        '헤드어택':[],
-        '비방향성':[],
-        '캐스팅':[],
-        '차징':[],
-        '쿨타임 감소':[],
-        '진화형 피해':[],
-        '물리 방어력':[],
-        '마법 방어력':[],
-        '체력':[],
-        '최대 생명력':[],
-        '생명력 활성':[]
-        }
-
     for u in stat_list:
         if '무기공격력' in u:
             dict_stat['무기공격력 증가 (+)'].append(int(u.split('+')[1]))
@@ -340,17 +265,17 @@ def stat(response):
     return dict_stat
 
 # 팔찌
-def armlet(response):
-    armlet_json = response['armlet']
-    jump_point = armlet_json['Element_007']['value']['Element_001']
-    armlet_output = [jump_point]
-    armlet_option = armlet_json['Element_004']['value']['Element_001'].lower().replace("<fontcolor='#99ff99'>",'') #.split('[]')
-    armlet_option = armlet_option.replace("<fontcolor='#ff9999'>",'').replace("</font>",'').replace("</img>",'[]').replace("<br>",'[]')
-    armlet_option = armlet_option.replace("<imgsrc='emoticon_tooltip_bracelet_locked'vspace='-5'>",'').replace("<imgsrc='emoticon_tooltip_bracelet_changeable'width='20'height='20'vspace='-6'>",'')
-    armlet_option = armlet_option.replace("[][]","<>").replace("[]",'').split("<>")
-    # armlet_option = [x for x in armlet_option if '<' not in x ]
-    armlet_output.extend(armlet_option)
-    return armlet_output
+# def armlet(response):
+#     armlet_json = response['armlet']
+#     jump_point = armlet_json['Element_007']['value']['Element_001']
+#     armlet_output = [jump_point]
+#     armlet_option = armlet_json['Element_004']['value']['Element_001'].lower().replace("<fontcolor='#99ff99'>",'') #.split('[]')
+#     armlet_option = armlet_option.replace("<fontcolor='#ff9999'>",'').replace("</font>",'').replace("</img>",'[]').replace("<br>",'[]')
+#     armlet_option = armlet_option.replace("<imgsrc='emoticon_tooltip_bracelet_locked'vspace='-5'>",'').replace("<imgsrc='emoticon_tooltip_bracelet_changeable'width='20'height='20'vspace='-6'>",'')
+#     armlet_option = armlet_option.replace("[][]","<>").replace("[]",'').split("<>")
+#     # armlet_option = [x for x in armlet_option if '<' not in x ]
+#     armlet_output.extend(armlet_option)
+#     return armlet_output
 
 # 보석
 def gem_info(response):

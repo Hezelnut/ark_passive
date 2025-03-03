@@ -1,40 +1,30 @@
-from player_load import equip, process
+from player_load import get_name, arkpassive
 from engrave import engraving
 from spec import transcendence,elixer,accessory, stat, armlet
-from arkpassive import load_evolve, load_enlight, load_jump
+import logging
 
-user_info = equip(input('플레이어 이름 : '))
+"""
+user_info = get_name(input('플레이어 이름 : '))
+response = user_info.get_response()
 
-# API 호출을 딱 세번만 하도록 분리해서 저장.
-# _, _, _ = user_info.equipment() 
-# 각각 장비, 각인, 아크패시브
-equ, eng, ark = user_info.equipment()
+transcendence(response) # 초월 정보
+accessory(response) # 악세사리의 특옵 정보
+elixer(response) # 엘릭서정보
+engraving(response) # 각인서 효과를 종합한 정보
 
-equip_process = process(equ)
-engrave_process = process(eng)
-ark_process = process(ark)
+ark_passive = arkpassive(response)
 
-transcendence(equip_process) # 초월 정보
-accessory(equip_process) # 악세사리의 특옵 정보
-elixer(equip_process) # 엘릭서정보
-engraving(engrave_process) # 각인서 효과를 종합한 정보
+ark_passive.evolve_tier_all()# 진화탭 모든 티어 정보
 
-load_evolve(ark_process).Tier_all() # 진화탭 모든 티어 정보
-# Tier_1()
-# Tier_2()
-# Tier_3()
-# TIer_4() 가능
+ark_passive.enlight() # 깨달음 탭
 
-load_enlight(ark_process).ark_enlight() # 깨달음 탭
+ark_passive.jump() # 도약 탭
+"""
 
-load_jump(ark_process).ark_jump() # 도약 탭
-
-
-def stat_all(user_info):
-    arm, eng, ark = user_info.equipment()
-    equip_process = process(arm)
-    engrave_process = process(eng)
-    ark_process = process(ark)
+def stat_all(name='절정하는창술누나'):
+    user_name = get_name(name)
+    response = user_name.get_response()
+    ark_passive = arkpassive(response)
 
     form = {'피해 증가':[],
         '추가 피해':[],
@@ -60,20 +50,35 @@ def stat_all(user_info):
         '생명력 활성':[]
         }
     
-    sum_stat = stat(equip_process)
-    sum_acc = accessory(equip_process)
-    sum_eli = elixer(equip_process)
-    sum_tra, _ = transcendence(equip_process)
-    sum_eng = engraving(engrave_process)
-    sum_arm = armlet(equip_process)
-    load_enlight(ark_process).ark_enlight()
-    load_evolve(ark_process).Tier_all()
-    load_jump(ark_process).ark_jump()
-    list_sum = [sum_tra,sum_acc,sum_arm,sum_eli,sum_eng,sum_stat]
+    sum_stat = stat(response)
+    sum_acc, acc_list = accessory(response)
+    sum_eli, elixer_name = elixer(response)
+    sum_tra, transcendence_stage = transcendence(response)
+    sum_eng, engrave_list = engraving(response)
+    sum_arm = armlet(response)
+    list_sum = [sum_eli,sum_eng,sum_stat,sum_acc,sum_tra] #,sum_arm은 제외
     for l in list_sum:
-        for k in [form.keys()]:
+        for k in list(form.keys()):
             form[k].extend(l[k])
+            
+    spec_dict = {
+        'accessory':acc_list,
+        'elixer':elixer_name,
+        'engrave':engrave_list,
+        'armlet':sum_arm,
+        'evolve':ark_passive.evolve_tier_all(),
+        'enlight':ark_passive.enlight(),
+        'jump':ark_passive.jump()
+    }
 
-    return list_sum
+    return form, spec_dict
 
-print(stat_all(user_info))
+
+if __name__ == '__main__':
+    form, spec_all = stat_all()
+    
+    print(form)
+    print('-'*5)
+    print(spec_all)
+    
+    print(spec_all['evolve'][1])
