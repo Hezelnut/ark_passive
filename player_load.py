@@ -38,7 +38,8 @@ class get_name:
 ### 팔찌 : equip_armlet()
 # Element_004 : 팔찌 효과
 
-form = {'피해 증가':[],
+form = {'특성':{'치명':0,'신속':0,'특화':0},
+        '피해 증가':[],
         '추가 피해':[],
         '공격력 증가 (%)':[],
         '공격력 증가 (+)':[],
@@ -61,7 +62,9 @@ form = {'피해 증가':[],
         '마법 방어력':[],
         '체력':[],
         '최대 생명력':[],
-        '생명력 활성':[]
+        '생명력 활성':[],
+        '공격속도':[],
+        '이동속도':[]
         }
 
 
@@ -250,7 +253,7 @@ class arkpassive:
             # t3_5 : 타이밍 지배
             # t3_bh : 방향성 여부
             tier3_stat = {
-                '진화형 피해':[t3_1*8,t3_2*2,t3_4*12,t3_5*8],
+                '진화형 피해':[t3_1*8+t3_2*2+t3_4*12+t3_5*8],
                 '쿨타임 감소_마나':[t3_1*7],
                 '쿨타임 감소_지배':[t3_5*5],
                 '백헤드 스킬 치명타 피해 증가':[t3_3*16],
@@ -280,7 +283,7 @@ class arkpassive:
         return tier4_stat
 
     def evolve_tier_all(self):
-        return self.evolve_Tier_1(), self.evolve_Tier_2(), self.evolve_Tier_3(), self.evolve_Tier_4()
+        return [self.evolve_Tier_1(), self.evolve_Tier_2(), self.evolve_Tier_3(), self.evolve_Tier_4()]
 
 
     def enlight(self):

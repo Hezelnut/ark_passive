@@ -24,6 +24,7 @@ ark_passive.jump() # 도약 탭
 def stat_all(name='절정하는창술누나'):
     user_name = get_name(name)
     response = user_name.get_response()
+    ark_passive = arkpassive(response)
 
     form = {'피해 증가':[],
         '추가 피해':[],
@@ -50,18 +51,34 @@ def stat_all(name='절정하는창술누나'):
         }
     
     sum_stat = stat(response)
-    sum_acc = accessory(response)
-    sum_eli, _ = elixer(response)
-    sum_tra, _ = transcendence(response)
-    sum_eng, _ = engraving(response)
+    sum_acc, acc_list = accessory(response)
+    sum_eli, elixer_name = elixer(response)
+    sum_tra, transcendence_stage = transcendence(response)
+    sum_eng, engrave_list = engraving(response)
     sum_arm = armlet(response)
     list_sum = [sum_eli,sum_eng,sum_stat,sum_acc,sum_tra] #,sum_arm은 제외
     for l in list_sum:
         for k in list(form.keys()):
             form[k].extend(l[k])
+            
+    spec_dict = {
+        'accessory':acc_list,
+        'elixer':elixer_name,
+        'engrave':engrave_list,
+        'armlet':sum_arm,
+        'evolve':ark_passive.evolve_tier_all(),
+        'enlight':ark_passive.enlight(),
+        'jump':ark_passive.jump()
+    }
 
-    return form
+    return form, spec_dict
 
 
 if __name__ == '__main__':
-    print(stat_all())
+    form, spec_all = stat_all()
+    
+    print(form)
+    print('-'*5)
+    print(spec_all)
+    
+    print(spec_all['evolve'][1])
